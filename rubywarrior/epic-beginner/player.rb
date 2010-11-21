@@ -6,7 +6,7 @@ class Player
   BANZAI=(20 * 0.80).to_i
 
   VISIBLE_THINGS=[ :stairs, :empty, :wall, :captive, :enemy ]
-  MAX_RANGED_ATTACK_DISTANCE=2
+  MAX_RANGED_ATTACK_DISTANCE=3
 
   def scan(spaces)
     line_of_sight = {}
@@ -54,12 +54,17 @@ class Player
         area
       }
 
-      stairs_next = i_spy[:forward][:nearest][:entity] == :stairs
+      stairs_ahead, stairs_behind = [:forward, :backward].map { |dir|
+        next false unless i_spy[dir][:stairs]
+        i_spy[dir][:view].all? { |item| [:empty, :stairs, :wall].include? item }
+      }
       nowhere_to_run = i_spy[:backward].fetch(:nearest_wall, MAX_RANGED_ATTACK_DISTANCE) <= MAX_RANGED_ATTACK_DISTANCE
-
-      if stairs_next
+      
+      if stairs_ahead
         warrior.walk! :forward
-      if took_damage
+      elsif stairs_behind
+        warrior.pivot!
+      elsif took_damage
         if warrior.health > RUNAWAY || nowhere_to_run
           warrior.walk! :forward
         else
