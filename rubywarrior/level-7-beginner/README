@@ -1,0 +1,41 @@
+Level 7
+
+You feel a wall right in front of you and an opening behind you.
+
+Tip: You are not as effective at attacking backward. Use warrior.feel.wall? and warrior.pivot! to turn around.
+
+ ------
+|>a S @|
+ ------
+
+  > = Stairs
+  @ = level_7 (20 HP)
+  a = Archer (7 HP)
+  S = Thick Sludge (24 HP)
+
+
+Warrior Abilities:
+
+  warrior.walk!
+    Move in the given direction (forward by default).
+
+  warrior.rest!
+    Gain 10% of max health back, but do nothing more.
+
+  warrior.feel
+    Returns a Space for the given direction (forward by default).
+
+  warrior.health
+    Returns an integer representing your health.
+
+  warrior.rescue!
+    Rescue a captive from his chains (earning 20 points) in given direction (forward by default).
+
+  warrior.attack!
+    Attacks a unit in given direction (forward by default).
+
+  warrior.pivot!
+    Rotate :left, :right or :backward (default)
+
+
+When you're done editing player.rb, run the rubywarrior command again.
