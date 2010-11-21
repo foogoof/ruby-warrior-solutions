@@ -5,14 +5,14 @@ class Player
   RUNAWAY=(20 * 0.40).to_i
   BANZAI=(20 * 0.75).to_i
 
-  VISIBLE_THINGS=%w{ stairs empty wall captive enemy }
+  VISIBLE_THINGS=[ :stairs, :empty, :wall, :captive, :enemy ]
 
   def scan(spaces)
     line_of_sight = {}
     spaces.each_with_index { |space, index|
       distance = index.succ
       entity = VISIBLE_THINGS.select { |type|
-        space.send "#{type}?".to_sym
+        space.send "#{type.to_s}?".to_sym
       }.first
       raise "woah" unless entity
       line_of_sight[:nearest] = entity unless line_of_sight[:nearest]
@@ -36,8 +36,8 @@ class Player
       warrior.pivot!
     elsif warrior.feel.empty?
       i_spy = scan warrior.look(:forward)
-      next_good_guy = i_spy.fetch("captive", []).first
-      next_bad_guy = i_spy.fetch("enemy", []).first
+      next_good_guy = i_spy.fetch(:captive, []).first
+      next_bad_guy = i_spy.fetch(:enemy, []).first
       if next_good_guy && next_bad_guy
         if next_good_guy < next_bad_guy
           warrior.walk!
