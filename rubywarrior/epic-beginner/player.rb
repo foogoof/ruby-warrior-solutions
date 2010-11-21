@@ -25,7 +25,7 @@ class Player
 
       nearest_entity_key = "nearest_#{entity.to_s}".to_sym
       line_of_sight[nearest_entity_key] = distance unless line_of_sight[nearest_entity_key]
-      
+
       # zero based distance could be easy to forget...
       if line_of_sight[:view]
         line_of_sight[:view] << entity
