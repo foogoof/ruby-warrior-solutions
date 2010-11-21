@@ -6,7 +6,7 @@ class Player
   BANZAI=(20 * 0.75).to_i
 
   VISIBLE_THINGS=%w{ stairs empty wall captive enemy }
-  
+
   def surveil(warrior)
     line_of_sight = {}
     warrior.look.each_with_index { |space, index|
@@ -24,10 +24,10 @@ class Player
     }
 
     pp line_of_sight
-    
+
     line_of_sight
   end
-  
+
   def play_turn(warrior)
     @last_known_health = warrior.health unless @last_known_health
     took_damage = @last_known_health > warrior.health
