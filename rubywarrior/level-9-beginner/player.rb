@@ -2,13 +2,14 @@ require 'pp'
 
 class Player
   @last_known_health = nil
-  RUNAWAY=(20 * 0.40).to_i
-  BANZAI=(20 * 0.75).to_i
+  RUNAWAY=(20 * 0.60).to_i
+  BANZAI=(20 * 0.80).to_i
 
   VISIBLE_THINGS=[ :stairs, :empty, :wall, :captive, :enemy ]
 
   def scan(spaces)
     line_of_sight = {}
+
     spaces.each_with_index { |space, index|
       distance = index.succ
       entity = VISIBLE_THINGS.select { |type|
@@ -21,9 +22,17 @@ class Player
       else
         line_of_sight[entity] = [distance]
       end
-    }
 
-    pp line_of_sight
+      nearest_entity_key = "nearest_#{entity.to_s}".to_sym
+      line_of_sight[nearest_entity_key] = distance unless line_of_sight[nearest_entity_key]
+      
+      # zero based distance could be easy to forget...
+      if line_of_sight[:view]
+        line_of_sight[:view] << entity
+      else
+        line_of_sight[:view] = [entity]
+      end
+    }
 
     line_of_sight
   end
@@ -34,39 +43,36 @@ class Player
 
     if warrior.feel.wall?
       warrior.pivot!
-    elsif warrior.feel.empty?
-      i_spy = scan warrior.look(:forward)
-      next_good_guy = i_spy.fetch(:captive, []).first
-      next_bad_guy = i_spy.fetch(:enemy, []).first
-      if next_good_guy && next_bad_guy
-        if next_good_guy < next_bad_guy
-          warrior.walk!
-        else
-          warrior.shoot!
-        end
-      elsif next_bad_guy
-        warrior.shoot!
-      elsif took_damage
+    elsif warrior.feel.enemy?
+      warrior.attack!
+    elsif warrior.feel.captive?
+      warrior.rescue!
+    else
+      i_spy = [:backward, :forward].reduce({}) { |area, direction|
+        area[direction] = scan warrior.look(direction)
+        area
+      }
+
+      if took_damage
         if warrior.health <= RUNAWAY
           warrior.walk! :backward
         else
           warrior.walk! :forward
         end
+      elsif warrior.health < BANZAI
+        warrior.rest!
       else
-        if warrior.health < BANZAI
-          warrior.rest!
+        if [:backward, :forward].all? { |dir| i_spy[dir][:enemy] } # it's a trap!!
+          if i_spy[:backward][:nearest_enemy] > i_spy[:forward][:nearest_enemy]
+            warrior.pivot!
+          else
+            warrior.walk!
+          end
         else
-          warrior.walk! :forward
+          warrior.walk!
         end
       end
-    else
-      if warrior.feel.captive?
-        warrior.rescue!
-      else
-        warrior.attack!
-      end
     end
-
     @last_known_health = warrior.health
   end
 end
