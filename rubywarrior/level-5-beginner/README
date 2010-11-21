@@ -1,0 +1,39 @@
+Level 5
+
+You hear cries for help. Captives must need rescuing.
+
+Tip: Use warrior.feel.captive? to see if there's a captive, and warrior.rescue! to rescue him. Don't attack captives.
+
+ -------
+|@ CaaSC|
+ -------
+
+  > = Stairs
+  @ = level_5 (20 HP)
+  C = Captive (1 HP)
+  a = Archer (7 HP)
+  S = Thick Sludge (24 HP)
+
+
+Warrior Abilities:
+
+  warrior.rescue!
+    Rescue a captive from his chains (earning 20 points) in given direction (forward by default).
+
+  warrior.walk!
+    Move in the given direction (forward by default).
+
+  warrior.rest!
+    Gain 10% of max health back, but do nothing more.
+
+  warrior.feel
+    Returns a Space for the given direction (forward by default).
+
+  warrior.health
+    Returns an integer representing your health.
+
+  warrior.attack!
+    Attacks a unit in given direction (forward by default).
+
+
+When you're done editing player.rb, run the rubywarrior command again.
