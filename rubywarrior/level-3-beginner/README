@@ -1,0 +1,34 @@
+Level 3
+
+The air feels thicker than before. There must be a horde of sludge.
+
+Tip: Be careful not to die! Use warrior.health to keep an eye on your health, and warrior.rest! to earn 10% of max health back.
+
+ ---------
+|@ s ss s>|
+ ---------
+
+  > = Stairs
+  @ = level_3 (20 HP)
+  s = Sludge (12 HP)
+
+
+Warrior Abilities:
+
+  warrior.walk!
+    Move in the given direction (forward by default).
+
+  warrior.feel
+    Returns a Space for the given direction (forward by default).
+
+  warrior.rest!
+    Gain 10% of max health back, but do nothing more.
+
+  warrior.health
+    Returns an integer representing your health.
+
+  warrior.attack!
+    Attacks a unit in given direction (forward by default).
+
+
+When you're done editing player.rb, run the rubywarrior command again.
