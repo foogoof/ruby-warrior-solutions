@@ -7,19 +7,19 @@ class Player
 
   VISIBLE_THINGS=%w{ stairs empty wall captive enemy }
 
-  def surveil(warrior)
+  def scan(spaces)
     line_of_sight = {}
-    warrior.look.each_with_index { |space, index|
-      index.succ
-      thing = VISIBLE_THINGS.select { |type|
+    spaces.each_with_index { |space, index|
+      distance = index.succ
+      entity = VISIBLE_THINGS.select { |type|
         space.send "#{type}?".to_sym
       }.first
-      raise "woah" unless thing
-      line_of_sight[:nearest] = thing unless line_of_sight[:nearest]
-      if line_of_sight[thing]
-        line_of_sight[thing] << index
+      raise "woah" unless entity
+      line_of_sight[:nearest] = entity unless line_of_sight[:nearest]
+      if line_of_sight[entity]
+        line_of_sight[entity] << distance
       else
-        line_of_sight[thing] = [index]
+        line_of_sight[entity] = [distance]
       end
     }
 
@@ -35,7 +35,7 @@ class Player
     if warrior.feel.wall?
       warrior.pivot!
     elsif warrior.feel.empty?
-      i_spy = surveil warrior
+      i_spy = scan warrior.look(:forward)
       next_good_guy = i_spy.fetch("captive", []).first
       next_bad_guy = i_spy.fetch("enemy", []).first
       if next_good_guy && next_bad_guy
