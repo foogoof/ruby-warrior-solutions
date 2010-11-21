@@ -2,7 +2,7 @@ require 'pp'
 
 class Player
   @last_known_health = nil
-  RUNAWAY=(20 * 0.60).to_i
+  RUNAWAY=(20 * 0.50).to_i
   BANZAI=(20 * 0.80).to_i
 
   VISIBLE_THINGS=[ :stairs, :empty, :wall, :captive, :enemy ]
@@ -59,6 +59,8 @@ class Player
         i_spy[dir][:view].all? { |item| [:empty, :stairs, :wall].include? item }
       }
 
+      sneaky_captive = i_spy[:backward][:captive] && i_spy[:backward][:view].all? {|item| [:empty, :stairs, :wall, :captive].include? item }
+      
       closest_wall = i_spy[:backward].fetch(:nearest_wall, MAX_RANGED_ATTACK_DISTANCE + 1)
       closest_enemy = i_spy[:forward][:nearest_enemy]
 
@@ -67,10 +69,10 @@ class Player
       else
         nowhere_to_run = (closest_enemy + (closest_wall - 1)) <= MAX_RANGED_ATTACK_DISTANCE
       end
-      
+
       if stairs_ahead
         warrior.walk! :forward
-      elsif stairs_behind
+      elsif stairs_behind || sneaky_captive
         warrior.pivot!
       elsif took_damage
         if warrior.health > RUNAWAY || nowhere_to_run
