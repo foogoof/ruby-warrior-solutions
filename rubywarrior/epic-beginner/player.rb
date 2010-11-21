@@ -58,7 +58,15 @@ class Player
         next false unless i_spy[dir][:stairs]
         i_spy[dir][:view].all? { |item| [:empty, :stairs, :wall].include? item }
       }
-      nowhere_to_run = i_spy[:backward].fetch(:nearest_wall, MAX_RANGED_ATTACK_DISTANCE) <= MAX_RANGED_ATTACK_DISTANCE
+
+      closest_wall = i_spy[:backward].fetch(:nearest_wall, MAX_RANGED_ATTACK_DISTANCE + 1)
+      closest_enemy = i_spy[:forward][:nearest_enemy]
+
+      if !(closest_wall && closest_enemy && took_damage)
+        nowhere_to_run = false
+      else
+        nowhere_to_run = (closest_enemy + (closest_wall - 1)) <= MAX_RANGED_ATTACK_DISTANCE
+      end
       
       if stairs_ahead
         warrior.walk! :forward
