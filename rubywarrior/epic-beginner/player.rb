@@ -105,8 +105,8 @@ class Player
           if nearest_enemy == @last_shot # @#!$#@ didn't die, charge!!
             warrior.walk!
           elsif nearest_enemy
-            warrior.shoot!
             shot = nearest_enemy
+            warrior.shoot!
           else
             warrior.walk!
           end
