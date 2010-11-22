@@ -8,6 +8,11 @@ class Player
   VISIBLE_THINGS=[ :stairs, :empty, :wall, :captive, :enemy ]
   MAX_RANGED_ATTACK_DISTANCE=3
 
+  def initialize
+    @last_shot = nil
+    @last_known_health = nil
+  end
+  
   def scan(spaces)
     line_of_sight = {}
 
@@ -41,6 +46,7 @@ class Player
   def play_turn(warrior)
     @last_known_health = warrior.health unless @last_known_health
     took_damage = @last_known_health > warrior.health
+    shot = nil
 
     if warrior.feel.wall?
       warrior.pivot!
@@ -53,7 +59,7 @@ class Player
         area[direction] = scan warrior.look(direction)
         area
       }
-
+      
       stairs_ahead, stairs_behind = [:forward, :backward].map { |dir|
         next false unless i_spy[dir][:stairs]
         i_spy[dir][:view].all? { |item| [:empty, :stairs, :wall].include? item }
@@ -61,14 +67,17 @@ class Player
 
       sneaky_captive = i_spy[:backward][:captive] && i_spy[:backward][:view].all? {|item| [:empty, :stairs, :wall, :captive].include? item }
       
-      closest_wall = i_spy[:backward].fetch(:nearest_wall, MAX_RANGED_ATTACK_DISTANCE + 1)
-      closest_enemy = i_spy[:forward][:nearest_enemy]
+      nearest_wall = i_spy[:backward].fetch(:nearest_wall, MAX_RANGED_ATTACK_DISTANCE + 1)
+      nearest_enemy = i_spy[:forward][:nearest_enemy]
+      nearest_captive = i_spy[:forward][:nearest_captive]
 
-      if !(closest_wall && closest_enemy && took_damage)
-        nowhere_to_run = false
-      else
-        nowhere_to_run = (closest_enemy + (closest_wall - 1)) <= MAX_RANGED_ATTACK_DISTANCE
+      nowhere_to_run = false
+      if nearest_wall && nearest_enemy && took_damage
+        nowhere_to_run = (nearest_enemy + (nearest_wall - 1)) <= MAX_RANGED_ATTACK_DISTANCE
       end
+
+      #pp i_spy
+      #puts stairs_ahead, stairs_behind, sneaky_captive, nearest_captive, nearest_wall, nearest_enemy, nowhere_to_run
 
       if stairs_ahead
         warrior.walk! :forward
@@ -83,9 +92,23 @@ class Player
       elsif warrior.health < BANZAI
         warrior.rest!
       else
-        if [:backward, :forward].all? { |dir| i_spy[dir][:enemy] } # it's a trap!!
-          if i_spy[:backward][:nearest_enemy] > i_spy[:forward][:nearest_enemy]
-            warrior.pivot!
+        surrounded = [:backward, :forward].all? { |dir| i_spy[dir][:enemy] } # it's a trap!!
+        
+        if surrounded && i_spy[:backward][:nearest_enemy] < i_spy[:forward][:nearest_enemy]
+          warrior.pivot!
+        elsif @last_shot
+          if nearest_enemy == @last_shot # @#!$#@ didn't die, charge!!
+            warrior.walk!
+          elsif nearest_enemy
+            warrior.shoot!
+            shot = nearest_enemy
+          else
+            warrior.walk!
+          end
+        elsif nearest_enemy || nearest_captive
+          if nearest_enemy == [nearest_enemy, nearest_captive].compact.min
+            warrior.shoot!
+            shot = nearest_enemy
           else
             warrior.walk!
           end
@@ -94,6 +117,8 @@ class Player
         end
       end
     end
+
     @last_known_health = warrior.health
+    @last_shot = shot
   end
 end
