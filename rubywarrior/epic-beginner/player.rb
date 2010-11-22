@@ -90,7 +90,12 @@ class Player
           warrior.walk! :backward
         end
       elsif warrior.health < BANZAI
-        warrior.rest!
+        if nearest_enemy
+          warrior.shoot!
+          shot = nearest_enemy
+        else
+          warrior.rest!
+        end
       else
         surrounded = [:backward, :forward].all? { |dir| i_spy[dir][:enemy] } # it's a trap!!
         
