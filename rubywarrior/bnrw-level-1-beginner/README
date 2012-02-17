@@ -1,18 +1,25 @@
-Level 1
+Level 2
 
-You see before yourself a long hallway with stairs at the end. There is nothing in the way.
+It is too dark to see anything, but you smell sludge nearby.
 
-Tip: Call warrior.walk! to walk forward in the Player 'play_turn' method.
+Tip: Use warrior.feel.empty? to see if there's anything in front of you, and warrior.attack! to fight it. Remember, you can only do one action (ending in !) per turn.
 
  --------
-|@      >|
+|@   s  >|
  --------
 
   > = Stairs
   @ = bnrw_level_1 (20 HP)
+  s = Sludge (12 HP)
 
 
 Warrior Abilities:
+
+  warrior.feel
+    Returns a Space for the given direction (forward by default).
+
+  warrior.attack!
+    Attacks a unit in given direction (forward by default).
 
   warrior.walk!
     Move in the given direction (forward by default).
