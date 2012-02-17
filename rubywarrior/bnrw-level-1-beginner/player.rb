@@ -1,9 +1,8 @@
-require 'rspec/core'
-RSpec::Core::Runner.autorun
+require 'rspec/core'; RSpec::Core::Runner.autorun
 
 class Player
   def self.warrior= warrior
-    @warrior ||= warrior
+    @warrior = warrior
   end
   def self.warrior
     @warrior
