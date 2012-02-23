@@ -9,8 +9,11 @@ class Player
   end
 
   def play_turn(warrior)
-    Player.warrior = warrior
-    warrior.walk!
+    if warrior.feel.empty?
+      warrior.walk!
+    else
+      warrior.attack!
+    end
   end
 end
 
