@@ -1,42 +1,5 @@
 require "spec_helper"
 
-require "#{File.dirname(__FILE__)}/game_logic"
-require "#{File.dirname(__FILE__)}/entity_methods"
-
-module WarriorMethods
-  def walk!
-  end
-
-  def attack!
-    thing = feel
-    thing.wound
-  end
-
-  def feel
-    @thing
-  end
-
-  def feel=(thing)
-    @thing = thing
-  end
-end
-
-module TestOnlyMethods
-  attr_accessor :health, :max_health
-
-  def rest!
-    nap! if health < max_health
-  end
-
-  private
-
-  def nap!
-    new_health = max_health / 10 + health
-    health = [max_health, new_health].min
-  end
-end
-
-
 class Warrior
   include WarriorMethods
   include EntityMethods
@@ -44,12 +7,6 @@ end
 
 class Enemy
   include EntityMethods
-end
-
-class Space
-  def empty?
-    true
-  end
 end
 
 describe "RubyWarrior" do
@@ -84,28 +41,12 @@ describe "RubyWarrior" do
           @warrior.should_receive(:nap!)
           @warrior.rest!
         end
-
-        context "and not alone" do
-          context GameLogic do
-            before do
-              @warrior.extend GameLogic
-              @warrior.feel = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
-              @warrior.feel.health = 5
-            end
-            
-            it "should attack instead of resting" do
-              @warrior.should_receive(:attack!)
-              @warrior.should_not_receive(:nap!)
-              @warrior.take_action
-            end
-          end
-        end
       end
     end
 
     context "when facing nothing" do
       before do
-        @space = double(Space).extend EntityMethods
+        @space = double(Object).extend EntityMethods
         @space.stub(:empty?) { true }
         @warrior.feel = @space
       end
@@ -113,17 +54,6 @@ describe "RubyWarrior" do
       it "should walk" do
         if @warrior.feel.empty?
           @warrior.walk!
-        end
-      end
-
-      context GameLogic do
-        before do
-          @warrior.extend GameLogic
-        end
-
-        it "should walk" do
-          @warrior.should_receive :walk!
-          @warrior.take_action
         end
       end
     end
@@ -139,18 +69,6 @@ describe "RubyWarrior" do
         @enemy.should_not be_wounded
         @warrior.attack!
         @enemy.should be_wounded
-      end
-
-      context GameLogic do
-        before do
-          @warrior.extend GameLogic
-        end
-
-        it "should be attacked" do
-          @enemy.should_not be_wounded
-          @warrior.take_action
-          @enemy.should be_wounded
-        end
       end
     end
   end

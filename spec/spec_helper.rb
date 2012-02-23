@@ -9,3 +9,9 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
 end
+
+require "#{File.dirname(__FILE__)}/game_logic"
+require "#{File.dirname(__FILE__)}/support/entity_methods"
+require "#{File.dirname(__FILE__)}/support/warrior_methods"
+require "#{File.dirname(__FILE__)}/support/test_only_methods"
+
