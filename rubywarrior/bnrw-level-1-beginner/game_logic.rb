@@ -4,6 +4,8 @@ module GameLogic
 
     if thing.empty?
       walk!
+    elsif wounded?
+      rest!
     else
       attack!
     end

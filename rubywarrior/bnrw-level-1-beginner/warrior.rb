@@ -91,17 +91,28 @@ describe "RubyWarrior" do
       context "when at full health" do
         it "should stay at full health" do
           @warrior.should_not_receive(:nap!)
-          @warrior.should_not be_wounded
           @warrior.rest!
         end
       end
       context "when wounded" do
+        before do
+          @warrior.wound
+        end
         it "energy should be restored" do
           @warrior.should_receive(:nap!)
-          @warrior.should_not be_wounded
-          @warrior.wound
-          @warrior.should be_wounded
           @warrior.rest!
+        end
+
+        context GameLogic do
+          before do
+            @warrior.extend GameLogic
+            @warrior.feel = Object.new.extend(EntityMethods)
+          end
+
+          it "should rest" do
+            @warrior.should_receive(:nap!)
+            @warrior.take_action
+          end
         end
       end
     end
