@@ -23,7 +23,19 @@ module WarriorMethods
   def feel=(thing)
     @thing = thing
   end
+end
 
+module TestOnlyMethods
+  def rest!
+    nap! if health < max_health
+  end
+
+  private
+
+  def nap!
+    new_health = max_health / 10 + health
+    health = [max_health, new_health].min
+  end
 end
 
 module EntityMethods
@@ -39,17 +51,6 @@ module EntityMethods
 
   def empty?
     false
-  end
-
-  def rest!
-    nap! if health < max_health
-  end
-
-  private
-
-  def nap!
-    new_health = max_health / 10 + health
-    health = [max_health, new_health].min
   end
 
 end
@@ -74,10 +75,12 @@ describe "RubyWarrior" do
     @warrior = double(Warrior)
     @warrior.extend WarriorMethods
     @warrior.extend EntityMethods
+    @warrior.extend TestOnlyMethods
     @warrior.health = @warrior.max_health = 20
   end
 
   describe Warrior do
+    subject { @warrior }
     it { should respond_to(:walk!) }
     it { should respond_to(:attack!) }
     it { should respond_to(:feel) }
