@@ -1,13 +1,19 @@
 module GameLogic
-  def take_action
-    thing = feel
 
-    if thing.empty?
+  def take_action
+    space = feel
+
+    if wounded?
+      if space.empty?
+        rest!
+      else
+        attack!
+      end
+    elsif space.empty?
       walk!
-    elsif wounded?
-      rest!
     else
       attack!
     end
   end
+
 end
