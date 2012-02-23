@@ -1,9 +1,4 @@
-begin
-  RSpec::Core::Runner.autorun
-rescue
-  require 'rspec/core'
-  RSpec::Core::Runner.autorun
-end
+require "spec_helper"
 
 require "#{File.dirname(__FILE__)}/game_logic"
 require "#{File.dirname(__FILE__)}/entity_methods"
