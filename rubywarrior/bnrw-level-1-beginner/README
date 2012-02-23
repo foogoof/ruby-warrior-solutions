@@ -1,12 +1,12 @@
-Level 2
+Level 3
 
-It is too dark to see anything, but you smell sludge nearby.
+The air feels thicker than before. There must be a horde of sludge.
 
-Tip: Use warrior.feel.empty? to see if there's anything in front of you, and warrior.attack! to fight it. Remember, you can only do one action (ending in !) per turn.
+Tip: Be careful not to die! Use warrior.health to keep an eye on your health, and warrior.rest! to earn 10% of max health back.
 
- --------
-|@   s  >|
- --------
+ ---------
+|@ s ss s>|
+ ---------
 
   > = Stairs
   @ = bnrw_level_1 (20 HP)
@@ -14,6 +14,12 @@ Tip: Use warrior.feel.empty? to see if there's anything in front of you, and war
 
 
 Warrior Abilities:
+
+  warrior.health
+    Returns an integer representing your health.
+
+  warrior.rest!
+    Gain 10% of max health back, but do nothing more.
 
   warrior.feel
     Returns a Space for the given direction (forward by default).
