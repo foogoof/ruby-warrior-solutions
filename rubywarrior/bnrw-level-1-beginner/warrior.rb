@@ -11,6 +11,8 @@ module WarriorMethods
 
   def attack!
     thing = feel
+    p thing
+    p thing.health
     thing.wound
   end
 
@@ -24,8 +26,6 @@ module WarriorMethods
 end
 
 module EntityMethods
-  # attr_accessor :health, :max_health
-
   def wounded?
     @health < @max_health
   end
@@ -48,7 +48,6 @@ module EntityMethods
 
   def max_health=(new_val)
     @max_health = new_val
-    puts "my max health is #{@max_health}"
   end
 end
 
@@ -57,6 +56,7 @@ class Warrior
 end
 
 class Enemy
+  include EntityMethods
 end
 
 describe Warrior do
@@ -73,20 +73,12 @@ describe Warrior do
   
   context "when attacked" do
     before do
-      @enemy = double Enemy
-
-      class << @enemy
-        include EntityMethods
-      end
-      @enemy.health = 5
-      @enemy.max_health = 5
-
+      @enemy = Enemy.new
+      @enemy.health = @enemy.max_health = 5
       @warrior.feel = @enemy
-      p @warrior.feel.max_health, @warrior.feel.health
     end
     
     it "should be hit" do
-      p @warrior.feel.health
       @warrior.attack!
       @enemy.should be_wounded
     end
