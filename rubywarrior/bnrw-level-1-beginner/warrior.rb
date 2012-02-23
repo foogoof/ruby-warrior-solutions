@@ -23,6 +23,7 @@ module WarriorMethods
   def feel=(thing)
     @thing = thing
   end
+
 end
 
 module EntityMethods
@@ -39,10 +40,23 @@ module EntityMethods
   def empty?
     false
   end
+
+  def rest!
+    nap! if health < max_health
+  end
+
+  private
+
+  def nap!
+    new_health = max_health / 10 + health
+    health = [max_health, new_health].min
+  end
+
 end
 
 class Warrior
   include WarriorMethods
+  include EntityMethods
 end
 
 class Enemy
@@ -57,13 +71,37 @@ end
 
 describe "RubyWarrior" do
   before do
-    @warrior = double(Warrior).extend WarriorMethods
+    @warrior = double(Warrior)
+    @warrior.extend WarriorMethods
+    @warrior.extend EntityMethods
+    @warrior.health = @warrior.max_health = 20
   end
 
   describe Warrior do
     it { should respond_to(:walk!) }
     it { should respond_to(:attack!) }
     it { should respond_to(:feel) }
+    it { should respond_to(:health) }
+    it { should respond_to(:rest!) }
+
+    context "resting" do
+      context "when at full health" do
+        it "should stay at full health" do
+          @warrior.should_not_receive(:nap!)
+          @warrior.should_not be_wounded
+          @warrior.rest!
+        end
+      end
+      context "when wounded" do
+        it "energy should be restored" do
+          @warrior.should_receive(:nap!)
+          @warrior.should_not be_wounded
+          @warrior.wound
+          @warrior.should be_wounded
+          @warrior.rest!
+        end
+      end
+    end
 
     context "when facing nothing" do
       before do
@@ -93,7 +131,7 @@ describe "RubyWarrior" do
     context "when facing an enemy" do
       before do
         @enemy = double(Enemy).extend EntityMethods
-        @enemy.health = @enemy.max_health = 5
+        @enemy.health = @enemy.max_health = 20
         @warrior.feel = @enemy
       end
       
