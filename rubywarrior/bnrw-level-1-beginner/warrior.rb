@@ -73,9 +73,9 @@ describe Warrior do
   
   context "when attacked" do
     before do
-      @enemy = class << Object.new
-                 extend EntityMethods
-               end
+      @enemy = double "enemy"
+      @enemy.extend EntityMethods
+
       @enemy.health = @enemy.max_health = 5
       @warrior.feel = @enemy
     end
