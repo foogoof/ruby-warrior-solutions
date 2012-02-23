@@ -90,15 +90,19 @@ describe "RubyWarrior" do
           @warrior.rest!
         end
 
-        context GameLogic do
-          before do
-            @warrior.extend GameLogic
-            @warrior.feel = Object.new.extend(EntityMethods)
-          end
-
-          it "should rest" do
-            @warrior.should_receive(:nap!)
-            @warrior.take_action
+        context "and not alone" do
+          context GameLogic do
+            before do
+              @warrior.extend GameLogic
+              @warrior.feel = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
+              @warrior.feel.health = 5
+            end
+            
+            it "should attack instead of resting" do
+              @warrior.should_receive(:attack!)
+              @warrior.should_not_receive(:nap!)
+              @warrior.take_action
+            end
           end
         end
       end
