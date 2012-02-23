@@ -5,6 +5,8 @@ rescue
   RSpec::Core::Runner.autorun
 end
 
+require "#{File.dirname(__FILE__)}/game_logic"
+
 module WarriorMethods
   def walk!
   end
@@ -75,6 +77,17 @@ describe "RubyWarrior" do
           @warrior.walk!
         end
       end
+
+      context GameLogic do
+        before do
+          @warrior.extend GameLogic
+        end
+
+        it "should walk" do
+          @warrior.should_receive :walk!
+          @warrior.take_action
+        end
+      end
     end
 
     context "when facing an enemy" do
@@ -88,6 +101,18 @@ describe "RubyWarrior" do
         @enemy.should_not be_wounded
         @warrior.attack!
         @enemy.should be_wounded
+      end
+
+      context GameLogic do
+        before do
+          @warrior.extend GameLogic
+        end
+
+        it "should be attacked" do
+          @enemy.should_not be_wounded
+          @warrior.take_action
+          @enemy.should be_wounded
+        end
       end
     end
   end
