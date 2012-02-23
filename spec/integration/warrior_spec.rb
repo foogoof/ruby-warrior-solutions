@@ -1,5 +1,11 @@
 require "spec_helper"
 
+def make_space
+  space = double(Object).extend EntityMethods
+  space.stub(:empty?) { true }
+  space
+end
+
 class Warrior
   include WarriorMethods
   include EntityMethods
@@ -15,32 +21,48 @@ describe "RubyWarrior" do
     @warrior.extend WarriorMethods
     @warrior.extend EntityMethods
     @warrior.extend TestOnlyMethods
-    @warrior.health = @warrior.max_health = 20
+    @warrior.health = @warrior.max_health = @warrior.last_health = 20
   end
 
   describe Warrior do
     subject { @warrior }
 
-    context "when wounded and not alone" do
+    context "when wounded" do
       before do
-        @warrior.wound
         @warrior.extend GameLogic
-        @warrior.feel = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
-        @warrior.feel.health = 5
+        @warrior.wound
       end
-      
-      it "should attack instead of resting" do
-        @warrior.should_receive(:attack!)
-        @warrior.should_not_receive(:nap!)
-        @warrior.take_action
+
+      context "and taking damage" do
+        before do
+          @warrior.feel = make_space
+        end
+
+        context "and taking damage" do
+          it "should charge into danger" do
+            @warrior.should_receive :walk!
+            @warrior.take_action
+          end
+        end
+      end
+
+      context "and not alone" do
+        before do
+          @warrior.feel = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
+          @warrior.feel.health = 5
+        end
+
+        it "should attack instead of resting" do
+          @warrior.should_receive(:attack!)
+          @warrior.should_not_receive(:nap!)
+          @warrior.take_action
+        end
       end
     end
 
     context "when facing nothing" do
       before do
-        @space = double(Object).extend EntityMethods
-        @space.stub(:empty?) { true }
-        @warrior.feel = @space
+        @warrior.feel = make_space
         @warrior.extend GameLogic
       end
 

@@ -5,7 +5,11 @@ module GameLogic
 
     if wounded?
       if space.empty?
-        rest!
+        if taking_damage?
+          walk!
+        else
+          rest!
+        end
       else
         attack!
       end
