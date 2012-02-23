@@ -1,4 +1,7 @@
 module WarriorMethods
+
+  attr_accessor :last_health
+  
   def walk!
   end
 
