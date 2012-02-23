@@ -1,16 +1,17 @@
-Level 3
+Level 4
 
-The air feels thicker than before. There must be a horde of sludge.
+You can hear bow strings being stretched.
 
-Tip: Be careful not to die! Use warrior.health to keep an eye on your health, and warrior.rest! to earn 10% of max health back.
+Tip: No new abilities this time, but you must be careful not to rest while taking damage. Save a @health instance variable and compare it on each turn to see if you're taking damage.
 
- ---------
-|@ s ss s>|
- ---------
+ -------
+|@ Sa S>|
+ -------
 
   > = Stairs
   @ = bnrw_level_1 (20 HP)
-  s = Sludge (12 HP)
+  S = Thick Sludge (24 HP)
+  a = Archer (7 HP)
 
 
 Warrior Abilities:
