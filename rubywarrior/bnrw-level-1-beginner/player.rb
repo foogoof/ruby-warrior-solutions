@@ -1,5 +1,5 @@
-require "#{File.dirname(__FILE__)}/game_logic"
-require "#{File.dirname(__FILE__)}/entity_methods"
+require "#{File.dirname(__FILE__)}/../../spec/game_logic"
+require "#{File.dirname(__FILE__)}/../../spec/support/entity_methods"
 
 class Player
 
