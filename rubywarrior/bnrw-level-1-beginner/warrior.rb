@@ -6,6 +6,7 @@ rescue
 end
 
 require "#{File.dirname(__FILE__)}/game_logic"
+require "#{File.dirname(__FILE__)}/entity_methods"
 
 module WarriorMethods
   def walk!
@@ -26,6 +27,8 @@ module WarriorMethods
 end
 
 module TestOnlyMethods
+  attr_accessor :health, :max_health
+
   def rest!
     nap! if health < max_health
   end
@@ -38,22 +41,6 @@ module TestOnlyMethods
   end
 end
 
-module EntityMethods
-  attr_accessor :health, :max_health
-
-  def wounded?
-    @health < @max_health
-  end
-
-  def wound
-    @health = @health - 1
-  end
-
-  def empty?
-    false
-  end
-
-end
 
 class Warrior
   include WarriorMethods
@@ -144,7 +131,7 @@ describe "RubyWarrior" do
 
     context "when facing an enemy" do
       before do
-        @enemy = double(Enemy).extend EntityMethods
+        @enemy = double(Enemy).extend(EntityMethods).extend(TestOnlyMethods)
         @enemy.health = @enemy.max_health = 20
         @warrior.feel = @enemy
       end
