@@ -11,8 +11,6 @@ module WarriorMethods
 
   def attack!
     thing = feel
-    p thing
-    p thing.health
     thing.wound
   end
 
@@ -26,6 +24,8 @@ module WarriorMethods
 end
 
 module EntityMethods
+  attr_accessor :health, :max_health
+
   def wounded?
     @health < @max_health
   end
@@ -34,20 +34,8 @@ module EntityMethods
     @health = @health - 1
   end
 
-  def health
-    @health
-  end
-
-  def health=(new_val)
-    @health = new_val
-  end
-
-  def max_health
-    @max_health
-  end
-
-  def max_health=(new_val)
-    @max_health = new_val
+  def empty?
+    false
   end
 end
 
@@ -59,30 +47,48 @@ class Enemy
   include EntityMethods
 end
 
-describe Warrior do
+class Space
+  def empty?
+    true
+  end
+end
+
+describe "RubyWarrior" do
   before do
-    @warrior = Warrior.new
+    @warrior = double(Warrior).extend WarriorMethods
   end
 
-  it { should respond_to(:walk!) }
-  it { should respond_to(:attack!) }
-  
-  describe "senses" do
+  describe Warrior do
+    it { should respond_to(:walk!) }
+    it { should respond_to(:attack!) }
     it { should respond_to(:feel) }
-  end
-  
-  context "when attacked" do
-    before do
-      @enemy = double "enemy"
-      @enemy.extend EntityMethods
 
-      @enemy.health = @enemy.max_health = 5
-      @warrior.feel = @enemy
+    context "when facing nothing" do
+      before do
+        @space = double(Space).extend EntityMethods
+        @space.stub(:empty?) { true }
+        @warrior.feel = @space
+      end
+
+      it "should walk" do
+        if @warrior.feel.empty?
+          @warrior.walk!
+        end
+      end
     end
-    
-    it "should be hit" do
-      @warrior.attack!
-      @enemy.should be_wounded
+
+    context "when facing an enemy" do
+      before do
+        @enemy = double(Enemy).extend EntityMethods
+        @enemy.health = @enemy.max_health = 5
+        @warrior.feel = @enemy
+      end
+      
+      it "should be attacked" do
+        @enemy.should_not be_wounded
+        @warrior.attack!
+        @enemy.should be_wounded
+      end
     end
   end
 
