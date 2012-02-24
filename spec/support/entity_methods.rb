@@ -12,6 +12,10 @@ module EntityMethods
     false
   end
 
+  def captive?
+    false
+  end
+
   def taking_damage?
     last_health > health
   end
