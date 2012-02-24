@@ -1,20 +1,24 @@
-Level 4
+Level 5
 
-You can hear bow strings being stretched.
+You hear cries for help. Captives must need rescuing.
 
-Tip: No new abilities this time, but you must be careful not to rest while taking damage. Save a @health instance variable and compare it on each turn to see if you're taking damage.
+Tip: Use warrior.feel.captive? to see if there's a captive, and warrior.rescue! to rescue him. Don't attack captives.
 
  -------
-|@ Sa S>|
+|@ CaaSC|
  -------
 
   > = Stairs
   @ = bnrw_level_1 (20 HP)
-  S = Thick Sludge (24 HP)
+  C = Captive (1 HP)
   a = Archer (7 HP)
+  S = Thick Sludge (24 HP)
 
 
 Warrior Abilities:
+
+  warrior.rescue!
+    Rescue a captive from his chains (earning 20 points) in given direction (forward by default).
 
   warrior.health
     Returns an integer representing your health.
