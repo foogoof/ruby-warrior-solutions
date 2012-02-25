@@ -21,6 +21,8 @@ describe "RubyWarrior" do
     @warrior.extend WarriorMethods
     @warrior.extend EntityMethods
     @warrior.extend TestOnlyMethods
+    @warrior.extend GameLogic
+
     @warrior.health = @warrior.max_health = @warrior.last_health = 20
   end
 
@@ -29,7 +31,6 @@ describe "RubyWarrior" do
 
     context "when wounded" do
       before do
-        @warrior.extend GameLogic
         @warrior.wound
       end
 
@@ -63,7 +64,6 @@ describe "RubyWarrior" do
     context "when facing nothing" do
       before do
         @warrior.ahead = make_space
-        @warrior.extend GameLogic
       end
 
       it "should walk" do
@@ -77,7 +77,6 @@ describe "RubyWarrior" do
         @enemy = double(Enemy).extend(EntityMethods).extend(TestOnlyMethods)
         @enemy.health = @enemy.max_health = 20
         @warrior.ahead = @enemy
-        @warrior.extend GameLogic
       end
 
       it "have at it!" do
