@@ -3,29 +3,38 @@ module GameLogic
   def take_action
     ahead = feel
     behind = feel(:backward)
+    action, args = nil, nil
 
     if wounded?
       if severely_wounded?
         if behind.empty?
-          walk!(:backward)
+          action = :walk!
+          args = :backward
         end
       else
         if ahead.empty?
           if taking_damage?
-            walk!
+            action = :walk!
           else
-            rest!
+            action = :rest!
           end
         else
-          attack!
+          action = :attack!
         end
       end
     elsif ahead.captive?
-      self.rescue!
+      action = :rescue!
     elsif ahead.empty?
-      walk!
+      action = :walk!
     else
-      attack!
+      action = :attack!
+    end
+
+    raise "uh, you forgot to do something" unless action
+    if args
+      send action, args
+    else
+      send action
     end
   end
 
