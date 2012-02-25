@@ -39,11 +39,9 @@ describe "RubyWarrior" do
           @warrior.ahead = make_space
         end
 
-        context "and taking damage" do
-          it "should charge into danger" do
-            @warrior.should_receive :walk!
-            @warrior.take_action
-          end
+        it "should charge into danger" do
+          @warrior.should_receive :walk!
+          @warrior.take_action
         end
       end
 
