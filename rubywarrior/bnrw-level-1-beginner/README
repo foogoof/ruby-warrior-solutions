@@ -1,21 +1,23 @@
-Level 6
+Level 7
 
-The wall behind you feels a bit further away in this room. And you hear more cries for help.
+You feel a wall right in front of you and an opening behind you.
 
-Tip: You can walk backward by passing ':backward' as an argument to walk!. Same goes for feel, rescue! and attack!.
+Tip: You are not as effective at attacking backward. Use warrior.feel.wall? and warrior.pivot! to turn around.
 
- --------
-|C @ S aa|
- --------
+ ------
+|>a S @|
+ ------
 
   > = Stairs
   @ = bnrw_level_1 (20 HP)
-  C = Captive (1 HP)
-  S = Thick Sludge (24 HP)
   a = Archer (7 HP)
+  S = Thick Sludge (24 HP)
 
 
 Warrior Abilities:
+
+  warrior.pivot!
+    Rotate :left, :right or :backward (default)
 
   warrior.rescue!
     Rescue a captive from his chains (earning 20 points) in given direction (forward by default).
