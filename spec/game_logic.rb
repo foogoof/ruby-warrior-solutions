@@ -10,6 +10,11 @@ module GameLogic
         if behind.empty?
           action = :walk!
           args = :backward
+        elsif behind.captive?
+          action = :rescue!
+          args = :backward
+        else
+          action = :rest!
         end
       else
         if ahead.empty?
