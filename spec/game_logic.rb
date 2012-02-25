@@ -5,14 +5,20 @@ module GameLogic
     behind = feel(:backward)
 
     if wounded?
-      if ahead.empty?
-        if taking_damage?
-          walk!
-        else
-          rest!
+      if severely_wounded?
+        if behind.empty?
+          walk!(:backward)
         end
       else
-        attack!
+        if ahead.empty?
+          if taking_damage?
+            walk!
+          else
+            rest!
+          end
+        else
+          attack!
+        end
       end
     elsif ahead.captive?
       self.rescue!

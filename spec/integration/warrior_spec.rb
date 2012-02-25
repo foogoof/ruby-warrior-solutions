@@ -29,7 +29,28 @@ describe "RubyWarrior" do
   describe Warrior do
     subject { @warrior }
 
-    context "when wounded" do
+    context "when heavily wounded" do
+      before do
+        @warrior.ahead = make_space
+        @warrior.behind = make_space
+      end
+
+      it "should retreat" do
+        # HOW: to support multiple calls to feel with different args?
+        # @warrior.should_receive(:feel).with(:backward)
+
+        @warrior.should_receive(:walk!).with(:backward)
+
+        # WHY: state changes don't stick... have to replace method calls with stubs
+        # @warrior.nearly_slay!
+        @warrior.stub(:health) { @warrior.max_health / 10 }
+
+        @warrior.take_action
+      end
+
+    end
+
+    context "when lightly wounded" do
       before do
         @warrior.wound
       end
