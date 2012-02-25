@@ -1,6 +1,7 @@
 module WarriorMethods
 
   attr_accessor :last_health
+  attr_accessor :ahead, :behind
   
   def walk!
   end
@@ -10,11 +11,19 @@ module WarriorMethods
     thing.wound
   end
 
-  def feel
-    @thing
+  def severely_wounded?
+    health <= max_health / 2
   end
 
-  def feel=(thing)
-    @thing = thing
+  def feel(direction = :forward)
+    case direction
+    when :forward
+      ahead
+    when :backward
+      behind
+    else
+      raise "Unexpected direction #{direction}"
+    end
   end
+
 end

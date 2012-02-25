@@ -21,34 +21,54 @@ describe "RubyWarrior" do
     @warrior.extend WarriorMethods
     @warrior.extend EntityMethods
     @warrior.extend TestOnlyMethods
+    @warrior.extend GameLogic
+
     @warrior.health = @warrior.max_health = @warrior.last_health = 20
   end
 
   describe Warrior do
     subject { @warrior }
 
-    context "when wounded" do
+    context "when heavily wounded" do
       before do
-        @warrior.extend GameLogic
+        @warrior.ahead = make_space
+        @warrior.behind = make_space
+      end
+
+      it "should retreat" do
+        # HOW: to support multiple calls to feel with different args?
+        # @warrior.should_receive(:feel).with(:backward)
+
+        @warrior.should_receive(:walk!).with(:backward)
+
+        # WHY: state changes don't stick... have to replace method calls with stubs
+        # @warrior.nearly_slay!
+        @warrior.stub(:health) { @warrior.max_health / 10 }
+
+        @warrior.take_action
+      end
+
+    end
+
+    context "when lightly wounded" do
+      before do
         @warrior.wound
       end
 
       context "and taking damage" do
         before do
-          @warrior.feel = make_space
+          @warrior.ahead = make_space
         end
 
-        context "and taking damage" do
-          it "should charge into danger" do
-            @warrior.should_receive :walk!
-            @warrior.take_action
-          end
+        it "should charge into danger" do
+          @warrior.should_receive :walk!
+          @warrior.take_action
         end
       end
 
       context "and not alone" do
         before do
-          @warrior.feel = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
+          @warrior.ahead = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
           @warrior.feel.health = 5
         end
 
@@ -62,8 +82,7 @@ describe "RubyWarrior" do
 
     context "when facing nothing" do
       before do
-        @warrior.feel = make_space
-        @warrior.extend GameLogic
+        @warrior.ahead = make_space
       end
 
       it "should walk" do
@@ -76,8 +95,7 @@ describe "RubyWarrior" do
       before do
         @enemy = double(Enemy).extend(EntityMethods).extend(TestOnlyMethods)
         @enemy.health = @enemy.max_health = 20
-        @warrior.feel = @enemy
-        @warrior.extend GameLogic
+        @warrior.ahead = @enemy
       end
 
       it "have at it!" do

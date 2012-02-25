@@ -48,7 +48,7 @@ describe "RubyWarrior" do
       before do
         @space = double(Object).extend EntityMethods
         @space.stub(:empty?) { true }
-        @warrior.feel = @space
+        @warrior.ahead = @space
       end
 
       it "should walk" do
@@ -62,7 +62,7 @@ describe "RubyWarrior" do
       before do
         @enemy = double(Enemy).extend(EntityMethods).extend(TestOnlyMethods)
         @enemy.health = @enemy.max_health = 20
-        @warrior.feel = @enemy
+        @warrior.ahead = @enemy
       end
       
       it "should be attacked" do
