@@ -35,7 +35,7 @@ describe "RubyWarrior" do
 
       context "and taking damage" do
         before do
-          @warrior.feel = make_space
+          @warrior.ahead = make_space
         end
 
         context "and taking damage" do
@@ -48,7 +48,7 @@ describe "RubyWarrior" do
 
       context "and not alone" do
         before do
-          @warrior.feel = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
+          @warrior.ahead = Object.new.extend(EntityMethods).extend(TestOnlyMethods)
           @warrior.feel.health = 5
         end
 
@@ -62,7 +62,7 @@ describe "RubyWarrior" do
 
     context "when facing nothing" do
       before do
-        @warrior.feel = make_space
+        @warrior.ahead = make_space
         @warrior.extend GameLogic
       end
 
@@ -76,7 +76,7 @@ describe "RubyWarrior" do
       before do
         @enemy = double(Enemy).extend(EntityMethods).extend(TestOnlyMethods)
         @enemy.health = @enemy.max_health = 20
-        @warrior.feel = @enemy
+        @warrior.ahead = @enemy
         @warrior.extend GameLogic
       end
 

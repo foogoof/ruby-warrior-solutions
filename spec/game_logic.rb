@@ -1,10 +1,11 @@
 module GameLogic
 
   def take_action
-    space = feel
+    ahead = feel
+    behind = feel(:backward)
 
     if wounded?
-      if space.empty?
+      if ahead.empty?
         if taking_damage?
           walk!
         else
@@ -13,9 +14,9 @@ module GameLogic
       else
         attack!
       end
-    elsif space.captive?
+    elsif ahead.captive?
       self.rescue!
-    elsif space.empty?
+    elsif ahead.empty?
       walk!
     else
       attack!
