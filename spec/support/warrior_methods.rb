@@ -12,7 +12,7 @@ module WarriorMethods
   end
 
   def severely_wounded?
-    health <= max_health / 10
+    health <= max_health / 2
   end
 
   def feel(direction = :forward)
