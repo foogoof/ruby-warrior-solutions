@@ -8,8 +8,12 @@ module GameLogic
     if wounded?
       if severely_wounded?
         if behind.empty?
-          action = :walk!
-          args = :backward
+          if taking_damage?
+            action = :walk!
+            args = :backward
+          else
+            action = :rest!
+          end
         elsif behind.captive?
           action = :rescue!
           args = :backward
