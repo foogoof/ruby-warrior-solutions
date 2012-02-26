@@ -20,6 +20,10 @@ module EntityMethods
     false
   end
 
+  def enemy?
+    false
+  end
+
   def taking_damage?
     last_health > health
   end

@@ -1,15 +1,27 @@
 require "spec_helper"
 
 def make_space
-  space = double(Object).extend EntityMethods
-  space.stub(:empty?) { true }
-  space
+  double("space").extend(EntityMethods).tap do |space|
+    space.stub(:empty?) { true }
+  end
 end
 
 def make_wall
-  wall = double(Object).extend EntityMethods
-  wall.stub(:wall?) { true }
-  wall
+  double("wall").extend(EntityMethods).tap do |wall|
+    wall.stub(:wall?) { true }
+  end
+end
+
+def make_enemy
+  double("enemy").extend(EntityMethods).tap do |enemy|
+    enemy.stub(:enemy?) { true }
+  end
+end
+
+def make_captive
+  double("captive").extend(EntityMethods).tap do |captive|
+    captive.stub(:captive?) { true }
+  end
 end
 
 class Warrior
@@ -34,6 +46,25 @@ describe "RubyWarrior" do
 
   describe Warrior do
     subject { @warrior }
+
+    context "when an enemy is visible" do
+      before do
+        @warrior.stub(:ahead) { make_space }
+        @warrior.stub(:behind) { make_space }
+      end
+
+      it "should shoot enemies" do
+        @warrior.stub(:look) { [make_space, make_enemy, make_captive] }
+        @warrior.should_receive(:shoot!)
+        @warrior.take_action
+      end
+
+      it "should NOT shoot captives" do
+        @warrior.stub(:look) { [make_space, make_captive, make_enemy] }
+        @warrior.should_receive(:walk!)
+        @warrior.take_action
+      end
+    end
 
     context "when facing a wall" do
       before do
@@ -100,7 +131,9 @@ describe "RubyWarrior" do
 
     context "when facing nothing" do
       before do
-        @warrior.ahead = make_space
+        space = make_space
+        @warrior.ahead = space
+        @warrior.stub(:next_thing) { space }
       end
 
       it "should walk" do

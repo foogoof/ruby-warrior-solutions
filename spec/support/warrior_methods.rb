@@ -15,6 +15,14 @@ module WarriorMethods
     health <= max_health / 2
   end
 
+  def next_thing
+    look.find { |thing| !thing.empty? }
+  end
+
+  # def look
+  #   []
+  # end
+
   def feel(direction = :forward)
     case direction
     when :forward
