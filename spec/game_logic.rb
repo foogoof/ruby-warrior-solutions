@@ -36,7 +36,11 @@ module GameLogic
     elsif ahead.captive?
       action = :rescue!
     elsif ahead.empty?
-      action = :walk!
+      if can_see_enemy?
+        action = :shoot!
+      else
+        action = :walk!
+      end
     else
       action = :attack!
     end

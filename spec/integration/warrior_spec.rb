@@ -1,15 +1,21 @@
 require "spec_helper"
 
 def make_space
-  space = double(Object).extend EntityMethods
-  space.stub(:empty?) { true }
-  space
+  double(Object).extend(EntityMethods).tap do |space|
+    space.stub(:empty?) { true }
+  end
 end
 
 def make_wall
-  wall = double(Object).extend EntityMethods
-  wall.stub(:wall?) { true }
-  wall
+  double(Object).extend(EntityMethods).tap do |wall|
+    wall.stub(:wall?) { true }
+  end
+end
+
+def make_enemy
+  double(Object).extend(EntityMethods).tap do |enemy|
+    enemy.stub(:enemy?) { true }
+  end
 end
 
 class Warrior
@@ -34,6 +40,19 @@ describe "RubyWarrior" do
 
   describe Warrior do
     subject { @warrior }
+
+    context "when an enemy is visible" do
+      before do
+        ahead = [make_space, make_enemy, make_space]
+        @warrior.stub(:look) { ahead }
+        @warrior.stub(:ahead) { ahead.first }
+        @warrior.stub(:behind) { make_space }
+      end
+      it "should shoot" do
+        @warrior.should_receive(:shoot!)
+        @warrior.take_action
+      end
+    end
 
     context "when facing a wall" do
       before do

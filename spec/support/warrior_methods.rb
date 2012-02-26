@@ -15,6 +15,14 @@ module WarriorMethods
     health <= max_health / 2
   end
 
+  def can_see_enemy?
+    look.any? { |thing| thing.enemy? }
+  end
+
+  def look
+    []
+  end
+
   def feel(direction = :forward)
     case direction
     when :forward
