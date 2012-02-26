@@ -6,6 +6,12 @@ def make_space
   space
 end
 
+def make_wall
+  wall = double(Object).extend EntityMethods
+  wall.stub(:wall?) { true }
+  wall
+end
+
 class Warrior
   include WarriorMethods
   include EntityMethods
@@ -28,6 +34,18 @@ describe "RubyWarrior" do
 
   describe Warrior do
     subject { @warrior }
+
+    context "when facing a wall" do
+      before do
+        @warrior.behind = make_space
+        @warrior.ahead = make_wall
+      end
+
+      it "should pivot" do
+        @warrior.should_receive(:pivot!)
+        @warrior.take_action
+      end
+    end
 
     context "when heavily wounded" do
       before do

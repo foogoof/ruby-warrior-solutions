@@ -31,6 +31,8 @@ module GameLogic
           action = :attack!
         end
       end
+    elsif ahead.wall?
+      action = :pivot!
     elsif ahead.captive?
       action = :rescue!
     elsif ahead.empty?
